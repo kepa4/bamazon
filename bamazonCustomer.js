@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
   user: 'root',
 
   // Your password
-  password: '',
+  password: 'password',
   database: 'bamazonDB',
 });
 
@@ -24,9 +24,37 @@ connection.connect(function(err) {
 function afterConnection() {
   connection.query('SELECT * FROM products', function(err, res) {
     if (err) throw err;
-    console.log(res);
-    connection.end();
   });
-}
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: 'Enter the Id of the product you want to buy',
+        name: 'product_id',
+      },
+      {
+        type: 'input',
+        message: 'How many would you like to buy?',
+        name: 'quantity',
+      },
+    ])
+    .then(function(answers) {
+      connection.query(
+        'UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?',
+        [answers.quantity, answers.product_id],
+        function(err, res) {
+          if (err) throw err;
+          console.log('Database updated');
+        },
+      );
 
-inquirer.prompt();
+      connection.query(
+        'Select price FROM products WHERE item_id = ?',
+        [answers.product_id],
+        function(err, res) {
+          if (err) throw err;
+          console.log('This will cost $' + res[0].price * answers.quantity);
+        },
+      );
+    });
+}
