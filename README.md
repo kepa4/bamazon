@@ -20,7 +20,7 @@ use mysql to run schema.sql and seeds.sql
 
 input item id:
 
-![input item id](https://github.com/kepa4/bamazon/blob/master/pictures/nodeBamazom.png?raw=true)
+![input item id](https://raw.githubusercontent.com/kepa4/bamazon/master/pictures/inputId.png)
 
 updated database collumn:
 
